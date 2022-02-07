@@ -35,9 +35,13 @@ function loadPersistenceToWordList() {
     let key, word;
     for (let i = 0; i < localStorage.length; i++) {
         key = localStorage.key(i);
-        if (key !== null && key.includes("hmg")) {
-            word = JSON.parse(localStorage.getItem(key));
-            wordList.push(word);
+        if (key === '') {
+            localStorage.removeItem(key);
+        } else {
+            if (key !== null && key.includes("hmg")) {
+                word = JSON.parse(localStorage.getItem(key));
+                wordList.push(word);
+            }
         }
     }
 };
