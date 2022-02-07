@@ -1,25 +1,24 @@
 let hangmanPersistence = localStorage.getItem("hangmanPersistence");
-let wordList = [];
 
-//check if the word list exists
-if (hangmanPersistence == null || !hangmanPersistence){
-    clearWords();
-    setInitialWords();
+
+function initialPersistence() {
+    if (hangmanPersistence == null || !hangmanPersistence) {
+        clearPersistence();
+        setInitialPersistence();
+    }
+    loadPersistenceToWordList();
 }
 
-loadWordList();
-
-function clearWords() {
+function clearPersistence() {
     for (let i = 0; i < localStorage.length; i++) {
         key = localStorage.key(i);
         if (key !== null && key.includes("hmg")) {
             localStorage.removeItem(key);
         }
-        console("clean");
     }
 };
 
-function setInitialWords(){
+function setInitialPersistence() {
     let word;
     localStorage.setItem('hangmanPersistence', true);
 
@@ -32,7 +31,7 @@ function setInitialWords(){
 };
 
 
-function loadWordList() {
+function loadPersistenceToWordList() {
     let key, word;
     for (let i = 0; i < localStorage.length; i++) {
         key = localStorage.key(i);
@@ -41,27 +40,12 @@ function loadWordList() {
             wordList.push(word);
         }
     }
-    return wordList;
 };
-    
-function saveWord(contents){
+
+function saveWord(contents) {
     let wordJson = contentsToWordJson(contents);
     let key = "hmg" + localStorage.length;
 
-    localStorage.setItem(key , wordJson)
+    localStorage.setItem(key, wordJson)
     wordList.push(JSON.parse(localStorage.getItem(key)));
-
-    console.log(localStorage);
-    console.log(wordList);
 };
-
-function findWord(word){
-    return result = wordList.find( words => words.contents === word );
-}
-
-function contentsToWordJson(contents){
-    return JSON.stringify({
-        contents: contents,
-        played: false
-    });
-}
