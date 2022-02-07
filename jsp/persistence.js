@@ -42,10 +42,17 @@ function loadPersistenceToWordList() {
     }
 };
 
-function saveWord(contents) {
+function saveWordToPersistence(contents) {
     let wordJson = contentsToWordJson(contents);
     let key = "hmg" + localStorage.length;
 
-    localStorage.setItem(key, wordJson)
-    wordList.push(JSON.parse(localStorage.getItem(key)));
+    try {
+        localStorage.setItem(key, wordJson)
+    } catch (e) {
+        console.log(e);
+        return false;
+    } finally {
+        wordList.push(JSON.parse(localStorage.getItem(key)));
+        return true;
+    }
 };
