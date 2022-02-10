@@ -9,6 +9,7 @@ function messageUser(action) {
         case 'warning':
             messageToast('warning', 'Palavra repetida!');
             break;
+
     }
 }
 
@@ -33,4 +34,23 @@ function toastConfig() {
             toast.addEventListener('mouseleave', Swal.resumeTimer);
         }
     });
+}
+
+function messageHint() {
+    const Toast = Swal.mixin({
+        toast: true,
+        width: '30%'
+    });
+
+    Toast.fire({
+        title: 'Hint?',
+        icon: 'question',
+        showCancelButton: true,
+    }).then((result) => {
+        if (result.isConfirmed) {
+            giveHint();
+        } else {
+            noGiveHint();
+        }
+    })
 }

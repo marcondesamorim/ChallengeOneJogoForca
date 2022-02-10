@@ -1,7 +1,10 @@
 let word;
 let peelWord
 let bodyParts;
-const PERDEU = 7;
+let quantLetters;
+let hintDone;
+const LOST = 7;
+const HINT = 6;
 
 console.log(localStorage);
 console.log(wordList);
@@ -12,7 +15,7 @@ round();
 
 function round() {
     if (wordList.length !== 0) {
-
+        hintDone = false;
         enableKeyboard();
 
         bodyParts = 0;
@@ -20,6 +23,8 @@ function round() {
         word = sortWord();
 
         peelWord = peel(word.content);
+
+        uniqueLetters = new Set(word.content);
 
         console.log(paintWord(peelWord));
     } else {
@@ -56,18 +61,15 @@ function paintWord(word) {
 
 function checkLetter(letter) {
     let found = false;
-    let ganhou = true;
     for (let i = 0; i < peelWord.length; i++) {
         if (peelWord[i][0] === letter) {
             peelWord[i][1] = true;
             found = true;
-        }
-        if (!peelWord[i][1]) {
-            ganhou = false;
+            uniqueLetters.delete(letter);
         }
     }
     console.log(paintWord(peelWord));
-    if (ganhou) {
+    if (uniqueLetters.size == 0) {
         localStorage.setItem(word.key, JSON.stringify({
             content: word.content,
             played: true
@@ -77,12 +79,36 @@ function checkLetter(letter) {
         console.log(wordList);
         round();
     }
+
     if (!found) {
-        bodyParts++; //desenha um parte do corpo
+        bodyParts++;
     }
 
-    if (bodyParts >= PERDEU) {
+    if (bodyParts == HINT && !hintDone && uniqueLetters.size >= 2) {
+        messageHint();
+    }
+
+    if (bodyParts >= LOST) {
         console.log("Você foi enforcado!");
         round();
     }
+}
+
+function giveHint() {
+    let found = false;
+    let i = 0;
+    while (!found) {
+        if (!peelWord[i][1]) {
+            peelWord[i][1] = true;
+            found = true;
+        }
+        i++;
+    }
+    hintDone = true;
+    console.log(paintWord(peelWord));
+}
+
+function noGiveHint() {
+    hintDone = true;
+    console.log(paintWord(peelWord));
 }
