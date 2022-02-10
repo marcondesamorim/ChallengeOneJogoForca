@@ -1,3 +1,17 @@
+function messageUser(action) {
+    switch (action) {
+        case 'success':
+            messageToast('success', 'Palavra cadastrada!');
+            break;
+        case 'error':
+            messageToast('error', 'Não foi possível salvar a palavra!');
+            break;
+        case 'warning':
+            messageToast('warning', 'Palavra repetida!');
+            break;
+    }
+}
+
 function messageToast(type, message) {
     const Toast = toastConfig()
 

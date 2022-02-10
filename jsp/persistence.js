@@ -1,12 +1,25 @@
-let hangmanPersistence = localStorage.getItem("hangmanPersistence");
+let hangman;
+let wordList = [];
 
+try {
+    hangman = localStorage.getItem("hangman");
+} catch (err0) {
+    console.log(erro);
+}
+
+initialPersistence();
 
 function initialPersistence() {
-    if (hangmanPersistence == null || !hangmanPersistence) {
+    if (hangman == null || !hangman) {
         clearPersistence();
         setInitialPersistence();
     }
-    loadPersistenceToWordList();
+    loadWordList();
+    if (wordList.length === 0) {
+        localStorage.clear();
+        setInitialPersistence();
+        loadWordList();
+    }
 }
 
 function clearPersistence() {
@@ -20,43 +33,77 @@ function clearPersistence() {
 
 function setInitialPersistence() {
     let word;
-    localStorage.setItem('hangmanPersistence', true);
-
-    localStorage.setItem("hmg1", contentsToWordJson("TEMPERATURA"));
-    localStorage.setItem("hmg2", contentsToWordJson("CASA"));
-    localStorage.setItem("hmg3", contentsToWordJson("EXPECTATIVA"));
-    localStorage.setItem("hmg4", contentsToWordJson("HOLLYWOOD"));
-    localStorage.setItem("hmg5", contentsToWordJson("TEMPERATURA"));
-    localStorage.setItem("hmg6", contentsToWordJson("SEMANA"));
-};
-
-
-function loadPersistenceToWordList() {
-    let key, word;
-    for (let i = 0; i < localStorage.length; i++) {
-        key = localStorage.key(i);
-        if (key === '') {
-            localStorage.removeItem(key);
-        } else {
-            if (key !== null && key.includes("hmg")) {
-                word = JSON.parse(localStorage.getItem(key));
-                wordList.push(word);
-            }
-        }
+    try {
+        localStorage.setItem('hangman', true);
+    } catch (erro) {
+        console.log(erro);
     }
+
+    saveWordToPersistence("SELVAGEM");
+    saveWordToPersistence("CASA");
+    saveWordToPersistence("EXPECTATIVA");
+    saveWordToPersistence("HOLLYWOOD");
+    saveWordToPersistence("TEMPERATURA");
+    saveWordToPersistence("SEMANA");
 };
 
-function saveWordToPersistence(contents) {
-    let wordJson = contentsToWordJson(contents);
+
+function loadWordList() {
+    wordList = [];
+    let key, word, aux;
+    for (let i = 0; i < localStorage.length; i++) {
+        try {
+            key = localStorage.key(i);
+            if (key !== null && key.includes("hmg")) {
+                aux = JSON.parse(localStorage.getItem(key));
+                if (!aux.played) {
+                    word = new Word(key, aux.content);
+                    wordList.push(word);
+                }
+            }
+        } catch (erro) {
+            console.log(erro)
+        }
+    };
+}
+
+function saveWord() {
+    let content = inputNovaPalavra.value;
+    if (content != null && content.length > 0) {
+        if (typeof findWord(content) === "undefined") {
+            if (saveWordToPersistence(content)) {
+                messageUser('success');
+            } else {
+                messageUser('error');
+            }
+        } else {
+            messageUser('warning');
+
+        }
+        inputNovaPalavra.value = "";
+    }
+}
+
+function saveWordToPersistence(content) {
+    let word;
     let key = "hmg" + localStorage.length;
+    let aux = JSON.stringify({
+        content: content,
+        played: false
+    });
 
     try {
-        localStorage.setItem(key, wordJson)
-    } catch (e) {
-        console.log(e);
+        localStorage.setItem(key, aux)
+    } catch (erro) {
+        console.log(erro);
         return false;
     } finally {
-        wordList.push(JSON.parse(localStorage.getItem(key)));
+        word = new Word(key, content, false);
+        wordList.push(word);
         return true;
     }
 };
+
+function findWord(content) {
+    return result = wordList.find(words => words.content === content);
+}
