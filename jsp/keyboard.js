@@ -46,12 +46,18 @@ function makeKeyboard() {
     line3.appendChild(createButton('M'));
 }
 
-function enableKeyboard() {
+function clearKeyboard() {
     let buttons = document.getElementsByTagName('button');
     for (let button of buttons) {
         button.disabled = false;
         button.style.backgroundColor = "CornflowerBlue";
     };
+}
+
+function disableKey(key) {
+    let button = document.getElementById(key);
+    button.disabled = true;
+    button.style.backgroundColor = "lightblue";
 }
 
 function createButton(letter) {

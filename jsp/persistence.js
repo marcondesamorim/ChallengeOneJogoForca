@@ -1,6 +1,7 @@
 let hangman;
 let wordList = [];
 
+
 try {
     hangman = localStorage.getItem("hangman");
 } catch (err0) {
@@ -72,13 +73,12 @@ function saveWord() {
     if (content != null && content.length > 0) {
         if (typeof findWord(content) === "undefined") {
             if (saveWordToPersistence(content)) {
-                messageUser('success');
+                messageToast('success', 'Palavra adicionada!');
             } else {
-                messageUser('error');
+                messageToast('erro', 'Não foi possível salvar palavra!');
             }
         } else {
-            messageUser('warning');
-
+            messageToast('warning', 'Palavra repetida!');
         }
         inputNovaPalavra.value = "";
     }
