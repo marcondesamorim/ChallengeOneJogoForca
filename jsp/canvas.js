@@ -171,7 +171,6 @@ function wordDotted(word) {
     let length = word.length;
     let startPosition = (WIDTH_DOTTED - (length * WIDTH_LETTER)) / 2;
 
-    console.log("start: " + startPosition + " tamanho: " + length * SIZE_LETTER);
     for (let i = 0; i < length; i++) {
         letterDotted(word[i], startPosition, i);
     }
@@ -183,7 +182,6 @@ function letterDotted(letter, start, index) {
     let x = start + (index * WIDTH_LETTER);
     let y = HEIGHT_LETTER;
 
-    console.log("start: " + start);
     if (letter[1]) {
         ctxDotted.fillText(letter[0], x, y);
     }
