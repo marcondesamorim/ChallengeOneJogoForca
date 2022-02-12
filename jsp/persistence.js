@@ -1,3 +1,5 @@
+// Gerenciador de persistência das palavras, usei o localStorage para salvar os dados
+
 let hangman;
 let wordList = [];
 

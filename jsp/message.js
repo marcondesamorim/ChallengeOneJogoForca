@@ -1,3 +1,6 @@
+// Monta as mensagens apresentadas usando a biblioteca sweetalert2 
+//https://sweetalert2.github.io/
+
 function messageToast(icon, title) {
     Swal.fire({
         position: 'top-end',
