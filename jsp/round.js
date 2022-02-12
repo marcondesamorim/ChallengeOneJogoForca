@@ -1,36 +1,33 @@
-let word;
-let peelWord
-let bodyParts;
-let quantLetters;
-let hintDone;
-const LOST = 6;
-const HINT = LOST - 1;
+// Round é cada jogada realizada
+let word; // A palavra usada na rodada
+let peelWord // Desmonto a palavra e associo cada letra a um booleano que indica  se foi descoberta ou não
+let bodyParts; // Parte do corpo ou número de rodada que errou o palpite
+let quantLetters; //Número de letrar
+let hintDone; // Já deu a dica???
+const LOST = 6; //Número de rodadas
+const HINT = LOST - 1; //Quando é para dar a dica
 
-console.log(localStorage);
-console.log(wordList);
+makeKeyboard(); // construindo o teclado dinamicamente
 
-makeKeyboard();
-
-round();
+round(); //jogada inicial
 
 function round() {
-    if (wordList.length !== 0) {
+    if (wordList.length !== 0) { //Enquanto tiver palavra, jogue
         hintDone = false;
 
-        drawHangman('silver');
+        drawHangman('silver'); // Pinta o corpo de cinza indicando que nenhuma palavra foi acertada
 
-        clearKeyboard();
+        clearKeyboard(); // Limpa as jogadas no teclado
 
-        bodyParts = 0;
+        bodyParts = 0; //Nenhuma palavra acertada
 
-        word = sortWord();
+        word = sortWord(); //Sorteia uma palavra da lista
 
-        peelWord = peel(word.content);
+        peelWord = peel(word.content); // Desmonta a palavra, associado cada letra com um booleano para indicar que foi descoberta ou não
 
-        wordDotted(peelWord);
+        wordDotted(peelWord); // Pinta a palavra deixando vsível as letras descobertas (usando o valor boleano associado)
 
-        uniqueLetters = new Set(word.content);
-        console.log(word.content);
+        uniqueLetters = new Set(word.content); //Monta as letras únicas da palavra 
     } else {
         message('Acabou as palavras!');
     }
@@ -46,31 +43,32 @@ function peel(word) {
 }
 
 function sortWord() {
-    let index = Math.floor(Math.random() * wordList.length);
+    let index = Math.floor(Math.random() * wordList.length); // Sorteia a palavra 
     return wordList[index];
 }
 
 
 function checkLetter(letter) {
-    let found = false;
+    let found = false; // Função que verifica se acertou ou não a letra
 
+    // Verifica se a letra tá na palavra sorteada
     for (let i = 0; i < peelWord.length; i++) {
-        if (peelWord[i][0] === letter) {
-            peelWord[i][1] = true;
-            found = true;
-            uniqueLetters.delete(letter);
+        if (peelWord[i][0] === letter) { // Se tiver
+            peelWord[i][1] = true; // Marca como encontrada
+            found = true; //Diz que achou a palavra
+            uniqueLetters.delete(letter); // E remove a letra das palavras únicas
             wordDotted(peelWord);
         }
     }
 
-    if (uniqueLetters.size == 0) {
-        localStorage.setItem(word.key, JSON.stringify({
+    if (uniqueLetters.size == 0) { // Se descobriu todas a palavras 
+        localStorage.setItem(word.key, JSON.stringify({ // Salva a palavra como descoberta
             content: word.content,
             played: true
         }));
-        loadWordList();
-        drawHangman('black');
-        headLife();
+        loadWordList(); //Recarrega as palavras da base de dados
+        drawHangman('black'); // Pinta o corpo de preto indicando que descobriu todas a palavras
+        headLife(); // Põe a carinha feliz
         wordDotted(peelWord);
         message("Você acertou a palavra!", round);
     }
@@ -80,10 +78,12 @@ function checkLetter(letter) {
         drawBody(bodyParts);
     }
 
+    // Se chegar na dica, não teve dica ainda e tem pelo menos duas letras ainda não descobertas    
     if (bodyParts == HINT && !hintDone && uniqueLetters.size >= 2) {
-        messageQuestion('Dica?', showHint);
+        messageQuestion('Dica?', showHint); // Pergunta se quer a dica
     }
 
+    // Se desenhou todas a partes do corpo
     if (bodyParts >= LOST) {
         headDead();
         wordDotted(peelWord);
@@ -91,11 +91,11 @@ function checkLetter(letter) {
     }
 }
 
-
+// Mostra a dica, marca a palavra como descoberta e pinta o corpo e desabilita a tecla
 function showHint() {
     let i = 0;
     let letter;
-    while (i < peelWord.length) {
+    while (i < peelWord.length) { // Marca todas a letra da palavra
         letter = peelWord[i][0];
         if (!peelWord[i][1]) {
             for (let j = i; j < peelWord.length; j++) {
@@ -110,5 +110,5 @@ function showHint() {
         i++;
     }
     hintDone = true;
-    wordDotted(peelWord);
+    wordDotted(peelWord); //Pinta o corpo
 }

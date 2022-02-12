@@ -1,3 +1,4 @@
+// Gerenciador do teclado criado dinamicamente
 function makeKeyboard() {
     let divKey = document.getElementById('key');
 
@@ -44,6 +45,11 @@ function makeKeyboard() {
     line3.appendChild(createButton('B'));
     line3.appendChild(createButton('N'));
     line3.appendChild(createButton('M'));
+
+    let buttons = document.getElementsByTagName('button');
+    for (let button of buttons) {
+        button.className = "btn-primary";
+    };
 }
 
 function clearKeyboard() {
